@@ -1,3 +1,4 @@
+
 export function algoritmoLineal(Xo, a, C, m, ri) {
   let numeros = [];
   let x = Xo;
@@ -7,3 +8,4 @@ export function algoritmoLineal(Xo, a, C, m, ri) {
   }
   return numeros;
 }
+

@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import "./App.css";
 import { algoritmoLineal } from "./algorithms/algoritmoLineal";
 import { multiplicadorConstante } from "./algorithms/multiplicadorConstante";
+import { media } from "./operations/media";
 
 function App() {
   const [algoritmo, setAlgoritmo] = useState("lineal");
   const [resultados, setResultados] = useState([]);
+  const [media, setMedia] = useState(null);
 
   const [Xo, setXo] = useState("");
   const [a, setA] = useState("");
@@ -20,9 +22,13 @@ function App() {
 
   const generar = () => {
     if (algoritmo === "lineal") {
-      setResultados(algoritmoLineal(Number(Xo), Number(a), Number(C), Number(m), Number(ri)));
+      const nums = algoritmoLineal(Number(Xo), Number(a), Number(C), Number(m), Number(ri));
+      setResultados(nums);
+      setMedia(media(nums));
     } else {
-      setResultados(multiplicadorConstante(Number(xo2), Number(D), Number(a2), Number(ri)));
+      const nums = multiplicadorConstante(Number(xo2), Number(D), Number(a2), Number(ri));
+      setResultados(nums);
+      setMedia(media(nums));
     }
   };
 
@@ -72,11 +78,16 @@ function App() {
       <div className="resultados">
         <h2>Resultados:</h2>
         {resultados.length > 0 ? (
-          <ol>
-            {resultados.map((num, idx) => (
-              <li key={idx}>{num}</li>
-            ))}
-          </ol>
+          <>
+            <ol>
+              {resultados.map((num, idx) => (
+                <li key={idx}>{num}</li>
+              ))}
+            </ol>
+            {(algoritmo === "lineal" || algoritmo === "noLineal") && (
+              <p><strong>Media:</strong> {media}</p>
+            )}
+          </>
         ) : (
           <p>No hay resultados aún</p>
         )}

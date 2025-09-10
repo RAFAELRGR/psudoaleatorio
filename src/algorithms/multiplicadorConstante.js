@@ -1,3 +1,4 @@
+
 export function multiplicadorConstante(xo, D, a, ri) {
   let y = [];
   let r = xo;
@@ -21,3 +22,4 @@ export function multiplicadorConstante(xo, D, a, ri) {
   }
   return y;
 }
+
