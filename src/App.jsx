@@ -6,6 +6,7 @@ import { multiplicadorConstante } from "./algorithms/multiplicadorConstante";
 function App() {
   const [algoritmo, setAlgoritmo] = useState("lineal");
   const [resultados, setResultados] = useState([]);
+  const [errores, setErrores] = useState("");
 
   const [Xo, setXo] = useState("");
   const [a, setA] = useState("");
@@ -13,17 +14,34 @@ function App() {
   const [m, setM] = useState("");
   const [ri, setRi] = useState("");
 
-
   const [D, setD] = useState("");
   const [xo2, setXo2] = useState("");
   const [a2, setA2] = useState("");
 
   const generar = () => {
     if (algoritmo === "lineal") {
-      setResultados(algoritmoLineal(Number(Xo), Number(a), Number(C), Number(m), Number(ri)));
+      let resultado = algoritmoLineal(
+        Number(Xo),
+        Number(a),
+        Number(C),
+        Number(m),
+        Number(ri)
+      );
+      if (isNaN(resultado[0])) {
+        resultado = [];
+        setErrores("Has ingresado uno o mas valores invalidos");
+      }
+      setResultados(resultado);
     } else {
-      setResultados(multiplicadorConstante(Number(xo2), Number(D), Number(a2), Number(ri)));
+      setResultados(
+        multiplicadorConstante(Number(xo2), Number(D), Number(a2), Number(ri))
+      );
     }
+  };
+
+  const establecerTipoAlgoritmo = (tipo) => {
+    setErrores("");
+    setAlgoritmo(tipo);
   };
 
   return (
@@ -35,7 +53,7 @@ function App() {
             type="radio"
             value="lineal"
             checked={algoritmo === "lineal"}
-            onChange={() => setAlgoritmo("lineal")}
+            onChange={() => establecerTipoAlgoritmo("lineal")}
           />
           Congruencial Lineal
         </label>
@@ -44,25 +62,70 @@ function App() {
             type="radio"
             value="noLineal"
             checked={algoritmo === "noLineal"}
-            onChange={() => setAlgoritmo("noLineal")}
+            onChange={() => establecerTipoAlgoritmo("noLineal")}
           />
           Multiplicador Constante
         </label>
       </div>
       {algoritmo === "lineal" ? (
         <div className="form">
-          <input type="number" value={Xo} onChange={(e) => setXo(e.target.value)} placeholder="Xo (semilla)" />
-          <input type="number" value={a} onChange={(e) => setA(e.target.value)} placeholder="a (multiplicador)" />
-          <input type="number" value={C} onChange={(e) => setC(e.target.value)} placeholder="C (constante)" />
-          <input type="number" value={m} onChange={(e) => setM(e.target.value)} placeholder="m (módulo)" />
-          <input type="number" value={ri} onChange={(e) => setRi(e.target.value)} placeholder="Cantidad de números" />
+          <input
+            type="number"
+            value={Xo}
+            onChange={(e) => setXo(e.target.value)}
+            placeholder="Xo (semilla)"
+          />
+          <input
+            type="number"
+            value={a}
+            onChange={(e) => setA(e.target.value)}
+            placeholder="a (multiplicador)"
+          />
+          <input
+            type="number"
+            value={C}
+            onChange={(e) => setC(e.target.value)}
+            placeholder="C (constante)"
+          />
+          <input
+            type="number"
+            value={m}
+            onChange={(e) => setM(e.target.value)}
+            placeholder="m (módulo)"
+          />
+          <input
+            type="number"
+            value={ri}
+            onChange={(e) => setRi(e.target.value)}
+            placeholder="Cantidad de números"
+          />
         </div>
       ) : (
         <div className="form">
-          <input type="number" value={xo2} onChange={(e) => setXo2(e.target.value)} placeholder="xo (semilla)" />
-          <input type="number" value={a2} onChange={(e) => setA2(e.target.value)} placeholder="a (multiplicador)" />
-          <input type="number" value={D} onChange={(e) => setD(e.target.value)} placeholder="D (dígitos)" />
-          <input type="number" value={ri} onChange={(e) => setRi(e.target.value)} placeholder="Cantidad de números" />
+          <input
+            type="number"
+            value={xo2}
+            onChange={(e) => setXo2(e.target.value)}
+            placeholder="xo (semilla)"
+          />
+          <input
+            type="number"
+            value={a2}
+            onChange={(e) => setA2(e.target.value)}
+            placeholder="a (multiplicador)"
+          />
+          <input
+            type="number"
+            value={D}
+            onChange={(e) => setD(e.target.value)}
+            placeholder="D (dígitos)"
+          />
+          <input
+            type="number"
+            value={ri}
+            onChange={(e) => setRi(e.target.value)}
+            placeholder="Cantidad de números"
+          />
         </div>
       )}
 
@@ -70,15 +133,29 @@ function App() {
         Generar
       </button>
       <div className="resultados">
-        <h2>Resultados:</h2>
-        {resultados.length > 0 ? (
-          <ol>
-            {resultados.map((num, idx) => (
-              <li key={idx}>{num}</li>
-            ))}
-          </ol>
+        {errores.length > 0 ? (
+          <>
+            <h2>Error</h2>
+            <p>{errores}</p>
+          </>
         ) : (
-          <p>No hay resultados aún</p>
+          <>
+            <h2>Resultados:</h2>
+            {resultados.length > 0 ? (
+              <>
+                <ol>
+                  {resultados.map((num, idx) => (
+                    <li key={idx}>{num}</li>
+                  ))}
+                </ol>
+                <button className="btn" onClick={generar}>
+                  Testear
+                </button>
+              </>
+            ) : (
+              <p>No hay resultados aún</p>
+            )}
+          </>
         )}
       </div>
     </div>
