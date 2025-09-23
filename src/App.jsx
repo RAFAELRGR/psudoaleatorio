@@ -1,32 +1,51 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import { algoritmoLineal } from "./algorithms/algoritmoLineal";
 import { multiplicadorConstante } from "./algorithms/multiplicadorConstante";
-import { pruebaUniformidad } from "./operations/chi_cuadrado";
-import { pruebaIndependencia } from "./operations/independencia";
-import { pruebaMedia } from "./operations/media";
-import { pruebaVarianza } from "./operations/varianza";
+import { useRandomNumber } from "./hooks/useRandomNumber";
+import useTestNumbers from "./hooks/useTestNumbers";
+import TypeAlgorithGenerateNumber from "./components/TypeAlgorithGenerateNumbers";
 
 function App() {
+  const randomNumber = useRandomNumber((state) => state.numbers);
+  const setRandomNumber = useRandomNumber((state) => state.setRandomNumber);
+
   const [algoritmo, setAlgoritmo] = useState("lineal");
-  const [resultados, setResultados] = useState([]);
+  const [resultados, setResultados] = useState(randomNumber);
   const [errores, setErrores] = useState("");
 
-  const [Xo, setXo] = useState("");
-  const [a, setA] = useState("");
-  const [C, setC] = useState("");
-  const [m, setM] = useState("");
-  const [ri, setRi] = useState("");
+  const [linealInputs, setLinealInputs] = useState({});
 
-  const [D, setD] = useState("");
-  const [xo2, setXo2] = useState("");
-  const [a2, setA2] = useState("");
-  const [mostrarTest, setMostrarTest] = useState(false);
+  const [multiplicadorInputs, setmultiplicadorInputs] = useState({});
+
+  const setInput = (e) => {
+    switch (algoritmo) {
+      case "lineal":
+        setLinealInputs((prevState) => ({
+          ...prevState,
+          [e.target.name]: e.target.value,
+        }));
+        break;
+      case "noLineal":
+        setmultiplicadorInputs((prevState) => ({
+          ...prevState,
+          [e.target.name]: e.target.value,
+        }));
+        break;
+    }
+  };
+
   const [contenidoTest, setContenidoTest] = useState([]);
+
+  useEffect(() => {
+    useTestNumbers(resultados, setContenidoTest);
+    console.log("test");
+  }, [resultados]);
 
   const generar = () => {
     let resultado = [];
     if (algoritmo === "lineal") {
+      const { Xo, a, C, m, ri } = linealInputs;
       resultado = algoritmoLineal(
         Number(Xo),
         Number(a),
@@ -35,6 +54,7 @@ function App() {
         Number(ri)
       );
     } else {
+      const { xo2, D, a2, ri } = multiplicadorInputs;
       resultado = multiplicadorConstante(
         Number(xo2),
         Number(D),
@@ -47,82 +67,63 @@ function App() {
       setErrores("Has ingresado uno o mas valores invalidos");
     }
     setResultados(resultado);
+    setRandomNumber(resultado);
   };
 
   const establecerTipoAlgoritmo = (tipo) => {
     setErrores("");
     setAlgoritmo(tipo);
-  };
-
-  const testearNumeros = () => {
-    setContenidoTest([
-      pruebaUniformidad(resultados),
-      pruebaIndependencia(resultados),
-      pruebaMedia(resultados),
-      pruebaVarianza(resultados)
-    ])
-    setMostrarTest(true);
+    setResultados([]);
   };
 
   return (
     <div className="container">
       <h1>Generador de Números Pseudoaleatorios</h1>
-      <div className="selector">
-        <label>
-          <input
-            type="radio"
-            value="lineal"
-            checked={algoritmo === "lineal"}
-            onChange={() => establecerTipoAlgoritmo("lineal")}
-          />
-          Congruencial Lineal
-        </label>
-        <label>
-          <input
-            type="radio"
-            value="noLineal"
-            checked={algoritmo === "noLineal"}
-            onChange={() => establecerTipoAlgoritmo("noLineal")}
-          />
-          Multiplicador Constante
-        </label>
-      </div>
+      <TypeAlgorithGenerateNumber
+        algoritmo={algoritmo}
+        establecerTipoAlgoritmo={establecerTipoAlgoritmo}
+      />
       {algoritmo === "lineal" ? (
         <div className="form">
           <input
             type="number"
             inputMode="numeric"
-            value={Xo}
-            onChange={(e) => setXo(e.target.value)}
+            value={linealInputs.Xo}
+            onChange={(e) => setInput(e)}
             placeholder="Xo (semilla)"
+            name="Xo"
           />
           <input
             type="number"
             inputMode="numeric"
-            value={a}
-            onChange={(e) => setA(e.target.value)}
+            value={linealInputs.a}
+            onChange={(e) => setInput(e)}
             placeholder="a (multiplicador)"
+            name="a"
           />
           <input
             type="number"
             inputMode="numeric"
-            value={C}
-            onChange={(e) => setC(e.target.value)}
+            value={linealInputs.C}
+            onChange={(e) => setInput(e)}
             placeholder="C (constante)"
+            name="C"
           />
           <input
             type="number"
             inputMode="numeric"
-            value={m}
-            onChange={(e) => setM(e.target.value)}
+            value={linealInputs.m}
+            onChange={(e) => setInput(e)}
             placeholder="m (módulo)"
+            name="m"
           />
           <input
             type="number"
             inputMode="numeric"
-            value={ri}
-            onChange={(e) => setRi(e.target.value)}
+            value={linealInputs.ri}
+            onChange={(e) => setInput(e)}
             placeholder="Cantidad de números"
+            name="ri"
           />
         </div>
       ) : (
@@ -130,65 +131,37 @@ function App() {
           <input
             type="number"
             inputMode="numeric"
-            value={xo2}
-            onChange={(e) => setXo2(e.target.value)}
+            value={multiplicadorInputs.xo2}
+            onChange={(e) => setInput(e)}
             placeholder="xo (semilla)"
+            name="xo2"
           />
           <input
             type="number"
             inputMode="numeric"
-            value={a2}
-            onChange={(e) => setA2(e.target.value)}
+            value={multiplicadorInputs.a2}
+            onChange={(e) => setInput(e)}
             placeholder="a (multiplicador)"
+            name="a2"
           />
           <input
             type="number"
             inputMode="numeric"
-            value={D}
-            onChange={(e) => setD(e.target.value)}
+            value={multiplicadorInputs.D}
+            onChange={(e) => setInput(e)}
             placeholder="D (dígitos)"
+            name="D"
           />
           <input
             type="number"
             inputMode="numeric"
-            value={ri}
-            onChange={(e) => setRi(e.target.value)}
+            value={multiplicadorInputs.ri}
+            onChange={(e) => setInput(e)}
             placeholder="Cantidad de números"
+            name="ri"
           />
         </div>
       )}
-      {mostrarTest ? (<>
-        <button className="btn" onClick={() => { setMostrarTest(false) }}>
-          Finalizar pruebas
-        </button>
-        <h2>Pruebas</h2>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
-          {contenidoTest.map((test, idx) => (
-            <div
-              key={idx}
-              style={{
-                flex: '0 0 calc(50% - 0.5rem)', // two cards per row
-                border: '1px solid #ccc',
-                padding: '1rem',
-                boxSizing: 'border-box'
-              }}
-            >
-              <h3>{['Chi cuadrado', 'Independencia', 'Media', 'Varianza'][idx]}</h3>
-              {Object.entries(test).map(([key, value]) => (
-                <p key={key}>{key} {value}</p>
-              ))}
-            </div>
-          ))}
-        </div>
-      </>) : (
-        <>
-          <br />
-          <button className="btn" onClick={generar}>
-            Generar
-          </button>
-        </>
-      )}
-
       <div className="resultados">
         {errores.length > 0 ? (
           <>
@@ -197,6 +170,9 @@ function App() {
           </>
         ) : (
           <>
+            <button className="btn" onClick={generar}>
+              Generar
+            </button>
             <h2>Resultados:</h2>
             {resultados.length > 0 ? (
               <>
@@ -205,9 +181,40 @@ function App() {
                     <li key={idx}>{num}</li>
                   ))}
                 </ol>
-                <button className="btn" onClick={testearNumeros}>
-                  Testear
-                </button>
+                <>
+                  <h2>Pruebas</h2>
+                  <div
+                    style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}
+                  >
+                    {contenidoTest.map((test, idx) => (
+                      <div
+                        key={idx}
+                        style={{
+                          flex: "0 0 calc(50% - 0.5rem)", // two cards per row
+                          border: "1px solid #ccc",
+                          padding: "1rem",
+                          boxSizing: "border-box",
+                        }}
+                      >
+                        <h3>
+                          {
+                            [
+                              "Chi cuadrado",
+                              "Independencia",
+                              "Media",
+                              "Varianza",
+                            ][idx]
+                          }
+                        </h3>
+                        {Object.entries(test).map(([key, value]) => (
+                          <p key={key}>
+                            {key} {value}
+                          </p>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                </>
               </>
             ) : (
               <p>No hay resultados aún</p>
