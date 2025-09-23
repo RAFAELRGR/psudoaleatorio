@@ -5,6 +5,9 @@ import { multiplicadorConstante } from "./algorithms/multiplicadorConstante";
 import { useRandomNumber } from "./hooks/useRandomNumber";
 import useTestNumbers from "./hooks/useTestNumbers";
 import TypeAlgorithGenerateNumber from "./components/TypeAlgorithGenerateNumbers";
+import FormAlgorithLineal from "./components/FormAlgorithLineal";
+import FormAlgorithMultiplicador from "./components/FormAlgorithMultiplicador";
+import TestContent from "./components/TestContent";
 
 function App() {
   const randomNumber = useRandomNumber((state) => state.numbers);
@@ -38,8 +41,7 @@ function App() {
   const [contenidoTest, setContenidoTest] = useState([]);
 
   useEffect(() => {
-    useTestNumbers(resultados, setContenidoTest);
-    console.log("test");
+    useTestNumbers(resultados, setContenidoTest, setErrores);
   }, [resultados]);
 
   const generar = () => {
@@ -84,83 +86,12 @@ function App() {
         establecerTipoAlgoritmo={establecerTipoAlgoritmo}
       />
       {algoritmo === "lineal" ? (
-        <div className="form">
-          <input
-            type="number"
-            inputMode="numeric"
-            value={linealInputs.Xo}
-            onChange={(e) => setInput(e)}
-            placeholder="Xo (semilla)"
-            name="Xo"
-          />
-          <input
-            type="number"
-            inputMode="numeric"
-            value={linealInputs.a}
-            onChange={(e) => setInput(e)}
-            placeholder="a (multiplicador)"
-            name="a"
-          />
-          <input
-            type="number"
-            inputMode="numeric"
-            value={linealInputs.C}
-            onChange={(e) => setInput(e)}
-            placeholder="C (constante)"
-            name="C"
-          />
-          <input
-            type="number"
-            inputMode="numeric"
-            value={linealInputs.m}
-            onChange={(e) => setInput(e)}
-            placeholder="m (módulo)"
-            name="m"
-          />
-          <input
-            type="number"
-            inputMode="numeric"
-            value={linealInputs.ri}
-            onChange={(e) => setInput(e)}
-            placeholder="Cantidad de números"
-            name="ri"
-          />
-        </div>
+        <FormAlgorithLineal linealInputs={linealInputs} setInput={setInput} />
       ) : (
-        <div className="form">
-          <input
-            type="number"
-            inputMode="numeric"
-            value={multiplicadorInputs.xo2}
-            onChange={(e) => setInput(e)}
-            placeholder="xo (semilla)"
-            name="xo2"
-          />
-          <input
-            type="number"
-            inputMode="numeric"
-            value={multiplicadorInputs.a2}
-            onChange={(e) => setInput(e)}
-            placeholder="a (multiplicador)"
-            name="a2"
-          />
-          <input
-            type="number"
-            inputMode="numeric"
-            value={multiplicadorInputs.D}
-            onChange={(e) => setInput(e)}
-            placeholder="D (dígitos)"
-            name="D"
-          />
-          <input
-            type="number"
-            inputMode="numeric"
-            value={multiplicadorInputs.ri}
-            onChange={(e) => setInput(e)}
-            placeholder="Cantidad de números"
-            name="ri"
-          />
-        </div>
+        <FormAlgorithMultiplicador
+          multiplicadorInputs={multiplicadorInputs}
+          setInput={setInput}
+        />
       )}
       <div className="resultados">
         {errores.length > 0 ? (
@@ -181,40 +112,7 @@ function App() {
                     <li key={idx}>{num}</li>
                   ))}
                 </ol>
-                <>
-                  <h2>Pruebas</h2>
-                  <div
-                    style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}
-                  >
-                    {contenidoTest.map((test, idx) => (
-                      <div
-                        key={idx}
-                        style={{
-                          flex: "0 0 calc(50% - 0.5rem)", // two cards per row
-                          border: "1px solid #ccc",
-                          padding: "1rem",
-                          boxSizing: "border-box",
-                        }}
-                      >
-                        <h3>
-                          {
-                            [
-                              "Chi cuadrado",
-                              "Independencia",
-                              "Media",
-                              "Varianza",
-                            ][idx]
-                          }
-                        </h3>
-                        {Object.entries(test).map(([key, value]) => (
-                          <p key={key}>
-                            {key} {value}
-                          </p>
-                        ))}
-                      </div>
-                    ))}
-                  </div>
-                </>
+                <TestContent contenidoTest={contenidoTest} />
               </>
             ) : (
               <p>No hay resultados aún</p>

@@ -3,7 +3,7 @@ import { pruebaIndependencia } from "../operations/independencia";
 import { pruebaMedia } from "../operations/media";
 import { pruebaVarianza } from "../operations/varianza";
 
-const useTestNumbers = (numbersToTest, setContenidoTest) => {
+const useTestNumbers = (numbersToTest, setContenidoTest, setErrores) => {
   try {
     let result_test = [
       pruebaUniformidad(numbersToTest),
@@ -14,6 +14,7 @@ const useTestNumbers = (numbersToTest, setContenidoTest) => {
     setContenidoTest(result_test);
   } catch (error) {
     setContenidoTest([]);
+    setErrores(error?.message);
   }
 };
 
