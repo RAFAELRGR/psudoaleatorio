@@ -1,8 +1,8 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useState, useEffect } from "react";
 import "./App.css";
 import { algoritmoLineal } from "./algorithms/algoritmoLineal";
 import { multiplicadorConstante } from "./algorithms/multiplicadorConstante";
-import { useRandomNumber } from "./hooks/useRandomNumber";
 import useTestNumbers from "./hooks/useTestNumbers";
 import TypeAlgorithGenerateNumber from "./components/TypeAlgorithGenerateNumbers";
 import FormAlgorithLineal from "./components/FormAlgorithLineal";
@@ -10,11 +10,8 @@ import FormAlgorithMultiplicador from "./components/FormAlgorithMultiplicador";
 import TestContent from "./components/TestContent";
 
 function App() {
-  const randomNumber = useRandomNumber((state) => state.numbers);
-  const setRandomNumber = useRandomNumber((state) => state.setRandomNumber);
-
   const [algoritmo, setAlgoritmo] = useState("lineal");
-  const [resultados, setResultados] = useState(randomNumber);
+  const [resultados, setResultados] = useState([]);
   const [errores, setErrores] = useState("");
 
   const [linealInputs, setLinealInputs] = useState({});
@@ -69,7 +66,6 @@ function App() {
       setErrores("Has ingresado uno o mas valores invalidos");
     }
     setResultados(resultado);
-    setRandomNumber(resultado);
   };
 
   const establecerTipoAlgoritmo = (tipo) => {
