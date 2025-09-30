@@ -1,12 +1,14 @@
-export function rappi_time(r) {
-  const IndiceGanancia = 0.5;
-  const CostoBase = 2000;
-  const GananciaBase = 4000;
-  const AgrupacionPorOrden = 5;
-  const TiempoBase = 300;
-  const BonificacionPedido = 0.1;
+export function rappi_time(
+  r,
+  AgrupacionPorOrden = 5,
+  BonificacionPedido = 0.1,
+  IndiceGanancia = 0.5,
+  GananciaBase = 4000,
+  CostoBase = 2000,
+  TiempoBase = 300
+) {
   const CostoTotal = [];
-
+  if (!Array.isArray(r) || r.length === 0) return [];
   for (let index = 0; index < r.length; index++) {
     r[index] = TiempoBase + TiempoBase * r[index];
     let aux =
@@ -16,5 +18,3 @@ export function rappi_time(r) {
   }
   return CostoTotal;
 }
-
-console.log(rappi_time([0.1, 0.4, 0.5]));

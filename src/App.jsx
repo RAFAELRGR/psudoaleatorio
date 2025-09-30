@@ -8,6 +8,7 @@ import TypeAlgorithGenerateNumber from "./components/TypeAlgorithGenerateNumbers
 import FormAlgorithLineal from "./components/FormAlgorithLineal";
 import FormAlgorithMultiplicador from "./components/FormAlgorithMultiplicador";
 import TestContent from "./components/TestContent";
+import { useNavigate } from "react-router-dom";
 
 function App() {
   const [algoritmo, setAlgoritmo] = useState("lineal");
@@ -15,7 +16,7 @@ function App() {
   const [errores, setErrores] = useState("");
 
   const [linealInputs, setLinealInputs] = useState({});
-
+  const navigate = useNavigate();
   const [multiplicadorInputs, setmultiplicadorInputs] = useState({});
 
   const setInput = (e) => {
@@ -74,6 +75,12 @@ function App() {
     setResultados([]);
   };
 
+  const routeToModels = () => {
+    navigate("/models", {
+      state: { randomNumbers: resultados },
+    });
+  };
+
   return (
     <div className="container">
       <h1>Generador de Números Pseudoaleatorios</h1>
@@ -109,6 +116,7 @@ function App() {
                   ))}
                 </ol>
                 <TestContent contenidoTest={contenidoTest} />
+                <button className="btn" onClick={routeToModels}></button>
               </>
             ) : (
               <p>No hay resultados aún</p>
