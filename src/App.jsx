@@ -44,24 +44,33 @@ function App() {
 
   const generar = () => {
     let resultado = [];
-    if (algoritmo === "lineal") {
-      const { Xo, a, C, m, ri } = linealInputs;
-      resultado = algoritmoLineal(
-        Number(Xo),
-        Number(a),
-        Number(C),
-        Number(m),
-        Number(ri)
-      );
-    } else {
-      const { xo2, D, a2, ri } = multiplicadorInputs;
-      resultado = multiplicadorConstante(
-        Number(xo2),
-        Number(D),
-        Number(a2),
-        Number(ri)
-      );
+    const aux = linealInputs?.ri ?? multiplicadorInputs?.ri;
+
+    if (aux >= 999) {
+      setErrores("El algoritmo solo esta configurado para arrojar maximo 999 numeros pseudoaletorios")
+      setResultados([])
     }
+    if (errores?.length <= 0) {
+      if (algoritmo === "lineal") {
+        const { Xo, a, C, m, ri } = linealInputs;
+        resultado = algoritmoLineal(
+          Number(Xo),
+          Number(a),
+          Number(C),
+          Number(m),
+          Number(ri)
+        );
+      } else {
+        const { xo2, D, a2, ri } = multiplicadorInputs;
+        resultado = multiplicadorConstante(
+          Number(xo2),
+          Number(D),
+          Number(a2),
+          Number(ri)
+        );
+      }
+    }
+
     if (isNaN(resultado[0])) {
       resultado = [];
       setErrores("Has ingresado uno o mas valores invalidos");
