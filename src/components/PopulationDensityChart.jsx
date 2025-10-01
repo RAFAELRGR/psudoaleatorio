@@ -4,7 +4,7 @@ const PopulationDensityChart = ({ data }) => (
   <ResponsiveContainer width="100%" height={300}>
     <AreaChart data={data}>
       <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="index">
+      <XAxis dataKey="index" interval={0}>
         <Label value="Cliente #" offset={-5} position="insideBottom" />
       </XAxis>
       <YAxis>

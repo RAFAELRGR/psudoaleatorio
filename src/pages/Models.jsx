@@ -56,18 +56,41 @@ const Models = () => {
           ))}
         </tbody>
       </table>
-      <div>
-        <h3>Analisis de resultados</h3>
-        <p>
-          Promedio de costo de entrega: <strong>
-            {(result[0].reduce((acc, val) => acc + Number(val), 0) / result[0].length).toFixed(2)}
-          </strong>
-        </p>
-        <p>
-          Costo maximo de entrega: <strong>
-            {Math.max(...result[0].map(Number)).toFixed(2)}
-          </strong>
-        </p>
+      <div style={{ marginTop: "24px" }}>
+        <h3>Análisis de resultados</h3>
+        <div className="result-cards-container">
+          <div className="result-card">
+            <span role="img" aria-label="Promedio">📊</span>
+            <div>
+              <div className="result-title">Promedio de costo de entrega</div>
+              <div className="result-value" style={{ color: "#3a86ff" }}>
+                {(result[0].reduce((acc, val) => acc + Number(val), 0) / result[0].length).toFixed(2)}
+              </div>
+            </div>
+          </div>
+          <div className="result-card">
+            <span role="img" aria-label="Máximo">💰</span>
+            <div>
+              <div className="result-title">Costo máximo de entrega</div>
+              <div className="result-value" style={{ color: "#e07a5f" }}>
+                {Math.max(...result[0].map(Number)).toFixed(2)}
+              </div>
+            </div>
+          </div>
+          <div className="result-card">
+            <span role="img" aria-label="Desviación">📈</span>
+            <div>
+              <div className="result-title">Desviación estándar</div>
+              <div className="result-value" style={{ color: "#43aa8b" }}>
+                {(
+                  Math.sqrt(
+                    result[0].map(Number).reduce((acc, val, _, arr) => acc + Math.pow(val - (arr.reduce((a, v) => a + v, 0) / arr.length), 2), 0) / result[0].length
+                  )
+                ).toFixed(2)}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <br />
       <h2>Simulación de Tiempos de Atención por Cliente (Modelo de Poisson)</h2>
@@ -76,6 +99,36 @@ const Models = () => {
         valor: Number(valor),
       }))} />
       <Get_PopulationDensity randomNumbers={result[1]} />
+
+      {result[1] && (
+        <div style={{ marginTop: "24px" }}>
+          <h3>Análisis de resultados</h3>
+          <div className="result-cards-container">
+            <div className="result-card">
+              <span role="img" aria-label="Clientes">👥</span>
+              <div>
+                <div className="result-title">Media de clientes por réplica</div>
+                <div className="result-value" style={{ color: "#3a86ff" }}>{result[1][0]}</div>
+              </div>
+            </div>
+            <div className="result-card">
+              <span role="img" aria-label="Desviación">📈</span>
+              <div>
+                <div className="result-title">Desviación estándar</div>
+                <div className="result-value" style={{ color: "#e07a5f" }}>{result[1][2]}</div>
+              </div>
+            </div>
+            <div className="result-card">
+              <span role="img" aria-label="Servicio">⏱️</span>
+              <div>
+                <div className="result-title">Media del tiempo de servicio</div>
+                <div className="result-value" style={{ color: "#43aa8b" }}>{result[1][3]}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
     </>
   );
 };

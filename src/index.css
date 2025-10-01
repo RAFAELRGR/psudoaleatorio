@@ -96,4 +96,42 @@ button:focus-visible {
 .tabla-vistosa td:first-child, .tabla-vistosa th:first-child {
   text-align: center;
 }
+
+
+
+
+
+
+.result-card {
+  background: #23223a;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  padding: 18px 28px;
+  min-width: 220px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.result-card span {
+  font-size: 2rem;
+}
+.result-card div {
+  display: flex;
+  flex-direction: column;
+}
+.result-card .result-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.result-card .result-title {
+  font-weight: bold;
+}
+.result-cards-container {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
 }
