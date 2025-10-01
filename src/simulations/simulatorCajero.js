@@ -6,6 +6,7 @@ import { exponencial } from "../models/exponencial.js"
 export function simularCajero(uniformes, replicas = 50, lambdaLlegadas = 10, lambdaServicio = 1 / 5) {
   if (!Array.isArray(uniformes) || uniformes.length === 0) return [];
   let resultados = [];
+  const tiempoPromedioPorReplica = []
   // const maxUniformes = replicas * 200;
   // const uniformes2 = algoritmoLineal(17, 23, 10007, 12345, maxUniformes);
 
@@ -19,7 +20,10 @@ export function simularCajero(uniformes, replicas = 50, lambdaLlegadas = 10, lam
     //   console.log("Prueba de uniformidad:", pruebaUniformidad(uniformes));
     //   console.log("Prueba de media:", pruebaMedia(uniformes));
     // }
-
+    if (clientes == -1) {
+      replicas = r
+      break;
+    }
     let tiemposServicio = [];
     for (let i = 0; i < clientes; i++) {
       if (idxExponencial >= uniformes.length) break;
@@ -38,7 +42,9 @@ export function simularCajero(uniformes, replicas = 50, lambdaLlegadas = 10, lam
       tiempoTotalServicio,
       tiempoPromedioServicio,
     });
+    tiempoPromedioPorReplica.push(tiempoPromedioServicio.toFixed(2))
   }
+
 
 
   const mediaClientes = resultados.reduce((a, r) => a + r.clientes, 0) / replicas;
@@ -51,7 +57,7 @@ export function simularCajero(uniformes, replicas = 50, lambdaLlegadas = 10, lam
   // console.log(`Media clientes por réplica: ${mediaClientes.toFixed(2)}`);
   // console.log(`Desviación estándar clientes: ${desvClientes.toFixed(2)}`);
   // console.log(`Media tiempo promedio de servicio (minutos): ${mediaTiempoServicio.toFixed(2)}`);
-  return [mediaClientes.toFixed(2), varClientes.toFixed(2), desvClientes.toFixed(2), mediaTiempoServicio.toFixed(2)];
+  return [mediaClientes.toFixed(2), varClientes.toFixed(2), desvClientes.toFixed(2), mediaTiempoServicio.toFixed(2), tiempoPromedioPorReplica];
 }
 
 
