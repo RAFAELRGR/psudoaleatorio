@@ -2,8 +2,9 @@ import { useState } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label } from "recharts";
 
 const DeliveryChart = ({ data }) => {
-  const [MAX_POINTS, SETMAX_POINTS] = useState(80);   // <‑‑ initial value
-
+  const [MAX_POINTS, SETMAX_POINTS] = useState(80);
+  let maxPointSlice = data.length;
+  let minPointSlice = data.length < 50 ? 1 : 50;
   const sampledData =
     data.length > MAX_POINTS
       ? data.filter((_, i) => i % Math.floor(data.length / MAX_POINTS) === 0)
@@ -17,8 +18,8 @@ const DeliveryChart = ({ data }) => {
           Cantidad de valores clave: {MAX_POINTS}
           <input
             type="range"
-            min={50}
-            max={500}
+            min={minPointSlice}
+            max={maxPointSlice}
             step={1}
             value={MAX_POINTS}
             onChange={(e) => SETMAX_POINTS(Number(e.target.value))}
