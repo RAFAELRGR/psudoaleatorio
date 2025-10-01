@@ -9,6 +9,7 @@ import FormAlgorithLineal from "./components/FormAlgorithLineal";
 import FormAlgorithMultiplicador from "./components/FormAlgorithMultiplicador";
 import TestContent from "./components/TestContent";
 import { useNavigate } from "react-router-dom";
+import useBear from "./hooks/useBear";
 
 function App() {
   const [algoritmo, setAlgoritmo] = useState("lineal");
@@ -19,6 +20,7 @@ function App() {
   const navigate = useNavigate();
   const [multiplicadorInputs, setmultiplicadorInputs] = useState({});
 
+  const setRandomNumbers = useBear((state) => state.updateRandomNumbers);
   const setInput = (e) => {
     switch (algoritmo) {
       case "lineal":
@@ -46,9 +48,11 @@ function App() {
     let resultado = [];
     const aux = linealInputs?.ri ?? multiplicadorInputs?.ri;
 
-    if (aux >= 999) {
-      setErrores("El algoritmo solo esta configurado para arrojar maximo 999 numeros pseudoaletorios")
-      setResultados([])
+    if (aux >= 99999) {
+      setErrores(
+        "El algoritmo solo esta configurado para arrojar maximo 999 numeros pseudoaletorios"
+      );
+      setResultados([]);
     }
     if (errores?.length <= 0) {
       if (algoritmo === "lineal") {
@@ -76,6 +80,7 @@ function App() {
       setErrores("Has ingresado uno o mas valores invalidos");
     }
     setResultados(resultado);
+    setRandomNumbers(resultado);
   };
 
   const establecerTipoAlgoritmo = (tipo) => {
@@ -85,9 +90,7 @@ function App() {
   };
 
   const routeToModels = () => {
-    navigate("/models", {
-      state: { randomNumbers: resultados },
-    });
+    navigate("/models");
   };
 
   return (
@@ -125,7 +128,10 @@ function App() {
                   ))}
                 </ol>
                 <TestContent contenidoTest={contenidoTest} />
-                <button className="btn" onClick={routeToModels}></button>
+                <br />
+                <button className="btn" onClick={routeToModels}>
+                  Probar en simulación
+                </button>
               </>
             ) : (
               <p>No hay resultados aún</p>

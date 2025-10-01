@@ -1,21 +1,27 @@
-import { useLocation } from "react-router-dom";
+/* eslint-disable react-hooks/rules-of-hooks */
 import Get_DeliveryHash from "../components/Get_DeliveryHash";
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
+import Get_PopulationDensity from "../components/Get_PopulationDensity";
+import useBear from "../hooks/useBear";
+import { rappi_time } from "../models/rappi_time";
+import { simularCajero } from "../simulations/simulatorCajero";
 const Models = () => {
-  const location = useLocation();
-  let r = location?.state?.randomNumbers ?? [];
-  const [deliveryHash, setDeliveryHash] = useState();
+  const r = useBear((state) => state);
+
+  const result = [rappi_time(r.randomNumbers), simularCajero(r.randomNumbers)]
+
+
 
   return (
     <>
       <p>Bustos esta es la ruta donde mostrara los modelos</p>
       <Get_DeliveryHash
-        deliveryHash={deliveryHash}
-        setDeliveryHash={setDeliveryHash}
-        r={r}
+        randomNumbers={result[0]}
       />
-      <p>{JSON.stringify(deliveryHash, null, 2)}</p>
+      <br />
+      <Get_PopulationDensity
+        randomNumbers={result[1]}
+      />
     </>
   );
 };
