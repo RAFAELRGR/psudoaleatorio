@@ -15,6 +15,7 @@ function App() {
   const [algoritmo, setAlgoritmo] = useState("lineal");
   const [resultados, setResultados] = useState([]);
   const [errores, setErrores] = useState("");
+  const [countShowResults, setCountShowResults] = useState(10)
 
   const [linealInputs, setLinealInputs] = useState({});
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ function App() {
   const generar = () => {
     let resultado = [];
     const aux = linealInputs?.ri ?? multiplicadorInputs?.ri;
-
+    setCountShowResults(10)
     if (aux >= 99999) {
       setErrores(
         "El algoritmo solo esta configurado para arrojar maximo 999 numeros pseudoaletorios"
@@ -123,10 +124,12 @@ function App() {
             {resultados.length > 0 ? (
               <>
                 <ol>
-                  {resultados.map((num, idx) => (
+                  {resultados.slice(resultados?.length - countShowResults).map((num, idx) => (
                     <li key={idx}>{num}</li>
                   ))}
                 </ol>
+                <button className="btn" onClick={() => { setCountShowResults(countShowResults + 10) }}>Ver más</button>
+                <br />
                 <TestContent contenidoTest={contenidoTest} />
                 <br />
                 <button className="btn" onClick={routeToModels}>

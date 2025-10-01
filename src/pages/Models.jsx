@@ -1,22 +1,17 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import Get_DeliveryHash from "../components/Get_DeliveryHash";
 import { useState, useEffect } from "react";
-import Get_PopulationDensity from "../components/Get_PopulationDensity";
 import useBear from "../hooks/useBear";
 import { rappi_time } from "../models/rappi_time";
 import { simularCajero } from "../simulations/simulatorCajero";
 import { redirect } from "react-router-dom";
 import DeliveryChart from "../components/DeliveryChart";
-import PopulationDensityChart from "../components/PopulationDensityChart";
+import TimeByClientDensityChart from "../components/TimeByClientDensityChart";
 
 const Models = () => {
   const r = useBear((state) => state);
   const exist = r.existR;
-  console.log(exist);
-
-
   const [result, setResult] = useState([null, null]);
-
+  console.log(result);
 
   useEffect(() => {
     if (exist == 0) {
@@ -28,34 +23,18 @@ const Models = () => {
     const res1 = simularCajero(r.randomNumbers);
 
     setResult([res0, res1]);
+
+
   }, [exist, r.randomNumbers]);
 
   if (!result[0] || !result[1]) {
     return <p>Loading models…</p>;
   }
-
   return (
     <>
       <p>Bustos esta es la ruta donde mostrara los modelos</p>
       <h2>Simulacion Costos de Entrega</h2>
       <DeliveryChart data={result[0].map((valor, idx) => ({ index: idx + 1, valor: Number(valor) }))} />
-      <Get_DeliveryHash randomNumbers={result[0]} />
-      {/* <table className="tabla-vistosa">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Costo de Entrega</th>
-          </tr>
-        </thead>
-        <tbody>
-          {result[0].map((valor, idx) => (
-            <tr key={idx}>
-              <td>{idx + 1}</td>
-              <td>{Number(valor).toFixed(2)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table> */}
       <div style={{ marginTop: "24px" }}>
         <h3>Análisis de resultados</h3>
         <div className="result-cards-container">
@@ -94,11 +73,10 @@ const Models = () => {
       </div>
       <br />
       <h2>Simulación de Tiempos de Atención por Cliente (Modelo de Poisson)</h2>
-      <PopulationDensityChart data={result[1].map((valor, idx) => ({
+      <TimeByClientDensityChart data={result[1][4].map((valor, idx) => ({
         index: idx + 1,
         valor: Number(valor),
       }))} />
-      <Get_PopulationDensity randomNumbers={result[1]} />
 
       {result[1] && (
         <div style={{ marginTop: "24px" }}>
@@ -108,7 +86,7 @@ const Models = () => {
               <span role="img" aria-label="Clientes">👥</span>
               <div>
                 <div className="result-title">Media de clientes por réplica</div>
-                <div className="result-value" style={{ color: "#3a86ff" }}>{result[1][0]}</div>
+                <div className="result-value" style={{ color: "#3a86ff" }}>{Math.floor(result[1][0])}</div>
               </div>
             </div>
             <div className="result-card">
