@@ -7,6 +7,7 @@ import { rappi_time } from "../models/rappi_time";
 import { simularCajero } from "../simulations/simulatorCajero";
 import { redirect } from "react-router-dom";
 import DeliveryChart from "../components/DeliveryChart";
+import PopulationDensityChart from "../components/PopulationDensityChart";
 
 const Models = () => {
   const r = useBear((state) => state);
@@ -69,6 +70,11 @@ const Models = () => {
         </p>
       </div>
       <br />
+      <h2>Simulación de Tiempos de Atención por Cliente (Modelo de Poisson)</h2>
+      <PopulationDensityChart data={result[1].map((valor, idx) => ({
+        index: idx + 1,
+        valor: Number(valor),
+      }))} />
       <Get_PopulationDensity randomNumbers={result[1]} />
     </>
   );
