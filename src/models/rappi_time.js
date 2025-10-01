@@ -7,14 +7,17 @@ export function rappi_time(
   CostoBase = 2000,
   TiempoBase = 300
 ) {
+  const rCopy = [...r];
+
   const CostoTotal = [];
-  if (!Array.isArray(r) || r.length === 0) return [];
-  for (let index = 0; index < r.length; index++) {
-    r[index] = TiempoBase + TiempoBase * r[index];
+  if (!Array.isArray(rCopy) || rCopy.length === 0) return [];
+
+  for (let index = 0; index < rCopy.length; index++) {
+    rCopy[index] = TiempoBase + TiempoBase * rCopy[index];
     let aux =
-      ((r[index] - TiempoBase) / AgrupacionPorOrden) *
+      ((rCopy[index] - TiempoBase) / AgrupacionPorOrden) *
       (BonificacionPedido * (IndiceGanancia * GananciaBase));
-    CostoTotal.push(aux + CostoBase);
+    CostoTotal.push((aux + CostoBase).toFixed(2));
   }
   return CostoTotal;
 }
