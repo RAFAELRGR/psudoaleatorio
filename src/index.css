@@ -65,4 +65,35 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+
+
+  .tabla-vistosa {
+  margin: 30px auto;
+  border-collapse: collapse;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  background: #22223b;
+  color: #f2e9e4;
+  border-radius: 8px;
+  min-width: 320px;
+  overflow: hidden;
+}
+.tabla-vistosa th {
+  background: #4a4e69;
+  border: 1px solid #9a8c98;
+  padding: 8px 16px;
+}
+.tabla-vistosa td {
+  border: 1px solid #9a8c98;
+  padding: 8px 16px;
+  text-align: right;
+}
+.tabla-vistosa tr:nth-child(even) {
+  background: #22223b;
+}
+.tabla-vistosa tr:nth-child(odd) {
+  background: #39375b;
+}
+.tabla-vistosa td:first-child, .tabla-vistosa th:first-child {
+  text-align: center;
+}
 }
