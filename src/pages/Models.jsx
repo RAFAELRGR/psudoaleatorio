@@ -40,7 +40,7 @@ const Models = () => {
       <h2>Simulacion Costos de Entrega</h2>
       <DeliveryChart data={result[0].map((valor, idx) => ({ index: idx + 1, valor: Number(valor) }))} />
       <Get_DeliveryHash randomNumbers={result[0]} />
-      <table className="tabla-vistosa">
+      {/* <table className="tabla-vistosa">
         <thead>
           <tr>
             <th>#</th>
@@ -55,7 +55,7 @@ const Models = () => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table> */}
       <div style={{ marginTop: "24px" }}>
         <h3>Análisis de resultados</h3>
         <div className="result-cards-container">
