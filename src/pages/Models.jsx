@@ -6,6 +6,7 @@ import { simularCajero } from "../simulations/simulatorCajero";
 import { redirect } from "react-router-dom";
 import DeliveryChart from "../components/DeliveryChart";
 import TimeByClientDensityChart from "../components/TimeByClientDensityChart";
+import BoxPlot from "../components/Boxplot";
 
 const Models = () => {
   const r = useBear((state) => state);
@@ -173,6 +174,7 @@ const Models = () => {
           </div>
         </div>
       )}
+      <BoxPlot results={result[1][4]} />
     </>
   );
 };
