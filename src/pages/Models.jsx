@@ -11,7 +11,6 @@ const Models = () => {
   const r = useBear((state) => state);
   const exist = r.existR;
   const [result, setResult] = useState([null, null]);
-  console.log(result);
 
   useEffect(() => {
     if (exist == 0) {
