@@ -63,14 +63,18 @@ export function simularCajero(uniformes, replicas = 50, lambdaLlegadas = 10, lam
 
   console.log(pruebaUniformidad(uniformes)); 
 
-  console.log('tiempo', tiempoPromedioPorReplica)
-  tiempoPromedioPorReplica.push(Number(tiempoPromedioServicio.toFixed(2))); 
-  console.log("tiempoPromedioPorReplica sample:", tiempoPromedioPorReplica.slice(0,10));
-  console.log("types:", tiempoPromedioPorReplica.map(x=>typeof x));
 
+  const ksTiempos = pruebaKolmogorovSmirnov(tiempoPromedioPorReplica, "normal");
+  console.log("Kolmogorov-Smirnov:", ksTiempos);
   const chiTiempos = pruebaChiCuadrado(tiempoPromedioPorReplica, "exponencial");
-  console.log("Chi tiempos:", chiTiempos);
+  console.log("Chi-cuadrado:", chiTiempos);
 
+
+  // console.log("=== Resultados Simulación Cajero ===");
+  // console.log(`Réplicas: ${replicas}`);
+  // console.log(`Media clientes por réplica: ${mediaClientes.toFixed(2)}`);
+  // console.log(`Desviación estándar clientes: ${desvClientes.toFixed(2)}`);
+  // console.log(`Media tiempo promedio de servicio (minutos): ${mediaTiempoServicio.toFixed(2)}`);
   return [mediaClientes.toFixed(2), varClientes.toFixed(2), desvClientes.toFixed(2), mediaTiempoServicio.toFixed(2), tiempoPromedioPorReplica];
 }
 
