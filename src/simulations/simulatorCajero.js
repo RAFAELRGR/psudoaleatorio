@@ -3,6 +3,7 @@ import { pruebaUniformidad } from "../operations/chi_cuadrado.js";
 import { pruebaMedia } from "../operations/media.js";
 import { exponencial } from "../models/exponencial.js"
 import { pruebaShapiroWilk } from '../Estadistica/shapiroWilk.js';
+import { pruebaKolmogorovSmirnov } from '../Estadistica/kolmogorovSmirnov.js';
 
 export function simularCajero(uniformes, replicas = 50, lambdaLlegadas = 10, lambdaServicio = 1 / 5) {
   if (!Array.isArray(uniformes) || uniformes.length === 0) return [];
@@ -18,10 +19,10 @@ export function simularCajero(uniformes, replicas = 50, lambdaLlegadas = 10, lam
 
     const { clientes, nextIdx } = poisson(lambdaLlegadas, uniformes, idxPoisson);
     idxPoisson = nextIdx;
-    // if (r === 0) {
-    //   console.log("Prueba de uniformidad:", pruebaUniformidad(uniformes));
-    //   console.log("Prueba de media:", pruebaMedia(uniformes));
-    // }
+ if (r === 0) {
+   console.log("Prueba de uniformidad:", pruebaUniformidad(uniformes));
+   console.log("Prueba de media:", pruebaMedia(uniformes));
+ }
     if (clientes == -1) {
       replicas = r
       break;
@@ -63,6 +64,15 @@ export function simularCajero(uniformes, replicas = 50, lambdaLlegadas = 10, lam
   console.log("Resultados de Shapiro-Wilk para tiempos promedio por réplica:");
   const shapiroResultTiempos = pruebaShapiroWilk(tiempoPromedioPorReplica);
   console.log(shapiroResultTiempos);  
+
+
+  console.log("Resultados KS para número de clientes:");
+  const ksClientes = pruebaKolmogorovSmirnov(ClientesR, "normal");
+  console.log(ksClientes);
+  console.log("Resultados KS para tiempos promedio:");
+  const ksTiempos = pruebaKolmogorovSmirnov(tiempoPromedioPorReplica, "normal");
+  console.log(ksTiempos);
+
 
   // console.log("=== Resultados Simulación Cajero ===");
   // console.log(`Réplicas: ${replicas}`);
