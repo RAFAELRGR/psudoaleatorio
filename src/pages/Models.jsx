@@ -30,6 +30,7 @@ const Models = () => {
   }
   return (
     <>
+    <div className="context-card">
       <h1>Modelos y simulación</h1>
       <h2>Simulacion Costos de Entrega</h2>
       <h3>Contexto</h3>
@@ -48,6 +49,7 @@ const Models = () => {
         </li>
         <li>∆𝑓 Evento de agrupación y despachar orden</li>
       </ol>
+    </div>
       <DeliveryChart
         data={result[0].map((valor, idx) => ({
           index: idx + 1,
@@ -108,6 +110,7 @@ const Models = () => {
         </div>
       </div>
       <br />
+      <div className="context-card">
       <h2>Simulación de Tiempos de Atención por Cliente (Modelo de Poisson)</h2>
       <h3>Contexto</h3>
       <p>
@@ -125,6 +128,7 @@ const Models = () => {
         <li>λ (lambdaServicio)</li>
         <li>T (tiempo de servicio)</li>
       </ol>
+      </div>
       <TimeByClientDensityChart
         data={result[1][4].map((valor, idx) => ({
           index: idx + 1,
