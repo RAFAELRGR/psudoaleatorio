@@ -1,11 +1,18 @@
-export function pruebaChiCuadrado(data, tipo = "uniforme", numIntervalos = 10) {
+export function pruebaChiCuadrado(
+  data,
+  tipo = "exponencial",
+  numIntervalos = 10
+) {
   if (!Array.isArray(data) || data.length < 5) {
-    return { mensaje: "Datos insuficientes para aplicar la prueba Chi-Cuadrado" };
+    return {
+      mensaje: "Datos insuficientes para aplicar la prueba Chi-Cuadrado",
+    };
   }
+  let auxData = data.map((d) => Number.parseFloat(d));
+  const n = auxData.length;
+  const min = Math.min(...auxData);
+  const max = Math.max(...auxData);
 
-  const n = data.length;
-  const min = Math.min(...data);
-  const max = Math.max(...data);
   const intervalos = [];
   const frecuenciaObservada = Array(numIntervalos).fill(0);
 
@@ -14,8 +21,7 @@ export function pruebaChiCuadrado(data, tipo = "uniforme", numIntervalos = 10) {
     intervalos.push([min + i * ancho, min + (i + 1) * ancho]);
   }
 
- 
-  for (let x of data) {
+  for (let x of auxData) {
     for (let i = 0; i < numIntervalos; i++) {
       if (x >= intervalos[i][0] && x < intervalos[i][1]) {
         frecuenciaObservada[i]++;
@@ -25,19 +31,17 @@ export function pruebaChiCuadrado(data, tipo = "uniforme", numIntervalos = 10) {
   }
 
   const frecuenciaEsperada = [];
-  const mean = data.reduce((a, b) => a + b, 0) / n;
+  const mean = auxData.reduce((a, b) => a + b, 0) / n;
+  const lambda = 1 / mean;
 
   for (let i = 0; i < numIntervalos; i++) {
     let prob = 0;
-
+    const a = intervalos[i][0];
+    const b = intervalos[i][1];
     switch (tipo) {
       case "exponencial":
-        const lambda = 1 / mean;
-        const a = intervalos[i][0];
-        const b = intervalos[i][1];
         prob = Math.exp(-lambda * a) - Math.exp(-lambda * b);
         break;
-
       case "uniforme":
       default:
         prob = 1 / numIntervalos;
@@ -54,7 +58,7 @@ export function pruebaChiCuadrado(data, tipo = "uniforme", numIntervalos = 10) {
   }
 
   const gradosLibertad = numIntervalos - 1;
-  const valorCritico = 16.9190;
+  const valorCritico = 16.919;
   //Sacamos este valor de la tabla de chicudrado
 
   return {
