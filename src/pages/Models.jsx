@@ -8,12 +8,15 @@ import DeliveryChart from "../components/DeliveryChart";
 import TimeByClientDensityChart from "../components/TimeByClientDensityChart";
 import BoxPlot from "../components/Boxplot";
 import CsvDownloader from "react-csv-downloader";
+import useCreateStructuraData from "../hooks/useCreateStructuraData";
 
 const Models = () => {
   const r = useBear((state) => state);
   const exist = r.existR;
   const [result, setResult] = useState([null, null]);
-
+  const [dataCSV, setDataCSV] = useState([]);
+  const [kolmogorov, setKolmogorov] = useState([]);
+  const [chiCuadrado, setChiCuadrado] = useState([]);
   useEffect(() => {
     if (exist == 0) {
       redirect("/");
@@ -24,6 +27,11 @@ const Models = () => {
     const res1 = simularCajero(r.randomNumbers);
 
     setResult([res0, res1]);
+    console.log(res1[6]);
+
+    setDataCSV(useCreateStructuraData(res1[4], res1[5]));
+    setKolmogorov(res1[6][0]);
+    setChiCuadrado(res1[6][1]);
   }, [exist, r.randomNumbers]);
 
   if (!result[0] || !result[1]) {
@@ -131,7 +139,15 @@ const Models = () => {
           <li>λ (lambdaServicio)</li>
           <li>T (tiempo de servicio)</li>
         </ol>
+        <CsvDownloader
+          filename={`SimulacionCajero_${Date.now()}`}
+          datas={dataCSV}
+          text="Descargar simulaciones"
+        >
+          <button className="btn">Descargar resultados de simulacion</button>
+        </CsvDownloader>
       </div>
+
       <TimeByClientDensityChart
         data={result[1][4].map((valor, idx) => ({
           index: idx + 1,
@@ -181,14 +197,124 @@ const Models = () => {
         </div>
       )}
       <BoxPlot results={result[1][4]} />
-      <CsvDownloader
-        filename="Test"
-        datas={[
-          { id: 1, test: result[1][4][0] },
-          { id: 1, test: result[1][4][1] },
-        ]}
-        text="Descargar simulaciones"
-      />
+      <br />
+      <div style={{ marginTop: "24px" }}>
+        <h3>Prueba de kolmogorov Smirnov</h3>
+        <div className="result-cards-container">
+          <div className="result-card">
+            <span role="img" aria-label="Distribucion">
+              🧮
+            </span>
+            <div>
+              <div className="result-title">Distribucion teorica</div>
+              <div className="result-value" style={{ color: "#3a86ff" }}>
+                {kolmogorov?.distribucion}
+              </div>
+            </div>
+          </div>
+          <div className="result-card">
+            <span role="img" aria-label="Desviación">
+              📈
+            </span>
+            <div>
+              <div className="result-title">Estadistico D</div>
+              <div className="result-value" style={{ color: "#e07a5f" }}>
+                {kolmogorov?.estadistico_D}
+              </div>
+            </div>
+          </div>
+          <div className="result-card">
+            <span role="img" aria-label="Servicio">
+              ⏱️
+            </span>
+            <div>
+              <div className="result-title">D Critico</div>
+              <div className="result-value" style={{ color: "#43aa8b" }}>
+                {kolmogorov?.dCritico}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="result-cards-grid">
+          {/* ...tarjetas de valores del boxplot... */}
+          <div className="result-card-v2" style={{ minWidth: "320px" }}>
+            <span className="result-icon" role="img" aria-label="Conclusión">
+              📝
+            </span>
+            <div className="result-title">Conclusión de Kolmogodov Smirnov</div>
+            <div
+              className="result-value"
+              style={{
+                fontSize: "1rem",
+                color: "#f2f2f2",
+                fontWeight: "normal",
+                marginTop: "8px",
+              }}
+            >
+              {kolmogorov?.decision}
+            </div>
+          </div>
+        </div>
+      </div>
+      <br />
+      <div style={{ marginTop: "24px" }}>
+        <h3>Prueba de Chi Cuadrado</h3>
+        <div className="result-cards-container">
+          <div className="result-card">
+            <span role="img" aria-label="Distribucion">
+              🧮
+            </span>
+            <div>
+              <div className="result-title">Distribucion teorica</div>
+              <div className="result-value" style={{ color: "#3a86ff" }}>
+                {chiCuadrado?.distribucion}
+              </div>
+            </div>
+          </div>
+          <div className="result-card">
+            <span role="img" aria-label="Desviación">
+              📈
+            </span>
+            <div>
+              <div className="result-title">Valor critico</div>
+              <div className="result-value" style={{ color: "#e07a5f" }}>
+                {chiCuadrado?.valorCritico}
+              </div>
+            </div>
+          </div>
+          <div className="result-card">
+            <span role="img" aria-label="Servicio">
+              ⏱️
+            </span>
+            <div>
+              <div className="result-title">Grados de libertad</div>
+              <div className="result-value" style={{ color: "#43aa8b" }}>
+                {chiCuadrado?.gradosLibertad}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="result-cards-grid">
+          {/* ...tarjetas de valores del boxplot... */}
+          <div className="result-card-v2" style={{ minWidth: "320px" }}>
+            <span className="result-icon" role="img" aria-label="Conclusión">
+              📝
+            </span>
+            <div className="result-title">Conclusión de Chi cuadrado</div>
+            <div
+              className="result-value"
+              style={{
+                fontSize: "1rem",
+                color: "#f2f2f2",
+                fontWeight: "normal",
+                marginTop: "8px",
+              }}
+            >
+              {chiCuadrado?.decision}
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   );
 };
