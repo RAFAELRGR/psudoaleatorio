@@ -58,7 +58,6 @@ export default function BoxPlot({ results }) {
   const median = sorted[Math.floor(n * 0.5)];
   const q3 = sorted[Math.floor(n * 0.75)];
   const max = sorted[n - 1];
-  console.log(data);
 
   const IQR = q3 - q1;
   const lowerWhisker = q1 - 1.5 * IQR;
